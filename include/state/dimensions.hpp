@@ -40,6 +40,10 @@ struct SphericalDimension: public Dimension {
     }
 };
 
+struct MotionDimension: public Dimension {
+    using Dimension::Dimension;
+}; 
+
 struct X : public CartesianDimension {
     using CartesianDimension::CartesianDimension; 
 };
@@ -62,4 +66,40 @@ struct Pitch : public SphericalDimension {
 
 struct Yaw : public SphericalDimension {
     using SphericalDimension::SphericalDimension; 
+};
+
+struct VelocityX: public MotionDimension {
+    using MotionDimension::MotionDimension;
+};
+
+struct VelocityY: public MotionDimension {
+    using MotionDimension::MotionDimension;
+};
+
+struct VelocityZ: public MotionDimension {
+    using MotionDimension::MotionDimension;
+};
+
+struct AccelerationX: public MotionDimension {
+    using MotionDimension::MotionDimension;
+};
+
+struct AccelerationY: public MotionDimension {
+    using MotionDimension::MotionDimension;
+};
+
+struct AccelerationZ: public MotionDimension {
+    using MotionDimension::MotionDimension;
+};
+
+struct RollRate : public MotionDimension {
+    using MotionDimension::MotionDimension; 
+};
+
+struct PitchRate : public MotionDimension {
+    using MotionDimension::MotionDimension; 
+};
+
+struct YawRate : public MotionDimension {
+    using MotionDimension::MotionDimension; 
 };
