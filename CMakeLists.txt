@@ -9,4 +9,9 @@ project(
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
   set(CMAKE_CXX_EXTENSIONS OFF)
 
+  find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+
+  include_directories(${PROJECT_SOURCE_DIR}/include)
+
   add_executable(main src/main.cpp)
+  target_link_libraries (main Eigen3::Eigen)
