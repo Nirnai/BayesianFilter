@@ -5,9 +5,6 @@
 #include "core/state/state.hpp"
 
 int main() {
-  // std::array<double, 10> a;
-  // auto t = Test2(a);
-  // ArrayWrapper<5> a(a);
   // Time t(1.0);
   // TimeSquared time_squared = Time(1.0) * Time(2.0);
   // X x(1.0);
@@ -23,12 +20,5 @@ int main() {
   // Assert on test
   // std::cout << x + y << std::endl;
 
-  // State<X, Y, Z> position(1, 2, 3);
-  // std::cout << "State with dimensions " << position.getDimension() << ": ";
-  // std::cout << position << std::endl;
-
-  // State<Roll, Pitch, Yaw> orientation(2.5 * M_PI, 2 * M_PI, 1.5 * M_PI);
-  // std::cout << "State with dimensions " << position.getDimension() << ": ";
-  // std::cout << orientation << std::endl;
   return 0;
 }
