@@ -15,3 +15,11 @@ project(
 
   add_executable(main src/main.cpp)
   target_link_libraries (main Eigen3::Eigen)
+  target_compile_features(main PRIVATE cxx_std_17)
+
+  ## Testing
+  option(BUILD_TEST "Build unit tests" ON)
+  if(BUILD_TEST)
+    enable_testing()
+    add_subdirectory(test)
+  endif()
