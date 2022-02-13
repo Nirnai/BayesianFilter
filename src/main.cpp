@@ -16,7 +16,6 @@ int main() {
   // std::cout << x + t * vx << std::endl;
   // std::cout << y + t * vy << std::endl;
   // std::cout << z + t * vz << std::endl;
-
   // Assert on test
   // std::cout << x + y << std::endl;
 

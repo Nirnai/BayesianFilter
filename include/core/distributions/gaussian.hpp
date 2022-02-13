@@ -10,18 +10,14 @@ template <typename MeanType, typename CovarianceType>
 class Gaussian {
  public:
   Gaussian(const MeanType &mean, const CovarianceType &covariance) : mean_(mean), covariance_(covariance) {}
-  const MeanType &getMean() { return mean_; }
-  const CovarianceType &getCovariance() { return covariance_; }
+  const MeanType &getMean() const { return mean_; }
+  const CovarianceType &getCovariance() const { return covariance_; }
   void setMean(const MeanType &mean) { mean_ = mean; }
   void setCovariance(const CovarianceType &covariance) { covariance_ = covariance; }
-  /// HINT: Not static because type deduction for static member functions is not possible
-  double mahalanobisDistance(MeanType sample, MeanType mean, CovarianceType covariance) {
-    /// HINT: c++20: add concept of transposable and invertable
+  constexpr static double mahalanobisDistance(MeanType sample, MeanType mean, CovarianceType covariance) {
     return math::transpose(sample - mean) * math::inverse(covariance) * (sample - mean);
   }
-  /// HINT: Not static because type deduction for static member functions is not possible
-  double probabilityDensity(MeanType sample, MeanType mean, CovarianceType covariance) {
-    /// HINT: c++20: add concept of matrix determinant
+  constexpr static double probabilityDensity(MeanType sample, MeanType mean, CovarianceType covariance) {
     return std::exp(-0.5 * mahalanobisDistance(sample, mean, covariance)) /
            std::sqrt(std::pow((2 * M_PI), math::dimension(mean)) * math::determinant(covariance));
   }
