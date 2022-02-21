@@ -1,49 +1,50 @@
 #include <gtest/gtest.h>
 
+#include <Eigen/Dense>
+
+#include "core/distributions/distribution.hpp"
 #include "core/distributions/gaussian.hpp"
 
 TEST(DistributionTest, GaussianDistribution) {
+  using namespace distributions;
+  using namespace univariate_gaussian;
+
   double mean = 0.0;
   double variance = 1.0;
-  double probability_density;
-  probability_density = distributions::Gaussian<double, double>::probabilityDensity(mean, mean, variance);
-  EXPECT_DOUBLE_EQ(probability_density, 0.3989422804014327);
-  distributions::Gaussian gaussian(mean, variance);
-  probability_density = gaussian.probabilityDensity(mean);
-  EXPECT_DOUBLE_EQ(probability_density, 0.3989422804014327);
-  probability_density = gaussian.probabilityDensity(mean, mean, variance);
+  double probability_density = probabilityDensity(Gaussian(mean, variance), mean);
   EXPECT_DOUBLE_EQ(probability_density, 0.3989422804014327);
 
+  auto gaussian = std::make_unique<Distribution>(Gaussian(0.0, 1.0), mahalanobisDistance<double>,
+                                                 probabilityDensity<double>, welfordsUpdate<double>);
   double total_probability;
   double bound = 10.0;
   double discretization = 0.1;
   for (double x = -bound; x < bound; x += discretization) {
-    total_probability += gaussian.probabilityDensity(x) * discretization;
+    total_probability += gaussian->density(x) * discretization;
   }
   EXPECT_NEAR(total_probability, 1.0, 1e-6);
 }
 
 TEST(DistributionTest, MultivariateGaussianDistribution) {
-  Eigen::Vector2d mean = Eigen::Vector2d::Zero();
-  Eigen::Matrix2d covariance = Eigen::Matrix2d::Identity();
-  double probability_density;
-  probability_density =
-      distributions::Gaussian<Eigen::Vector2d, Eigen::Matrix2d>::probabilityDensity(mean, mean, covariance);
-  EXPECT_DOUBLE_EQ(probability_density, std::pow(0.3989422804014327, 2));
-  distributions::Gaussian gaussian(mean, covariance);
-  probability_density = gaussian.probabilityDensity(mean);
-  EXPECT_DOUBLE_EQ(probability_density, std::pow(0.3989422804014327, 2));
-  probability_density = gaussian.probabilityDensity(mean, mean, covariance);
+  using namespace Eigen;
+  using namespace distributions;
+  using namespace multivariate_gaussian;
+
+  Vector2d mean = Vector2d::Zero();
+  Matrix2d covariance = Matrix2d::Identity();
+  double probability_density = probabilityDensity(Gaussian(mean, covariance), mean);
   EXPECT_DOUBLE_EQ(probability_density, std::pow(0.3989422804014327, 2));
 
+  auto gaussian = std::make_unique<Distribution>(Gaussian(mean, covariance), mahalanobisDistance<Vector2d, Matrix2d>,
+                                                 probabilityDensity<Vector2d, Matrix2d>, noOp<Vector2d, Matrix2d>);
   double total_probability;
   double bound = 10.0;
   double discretization = 0.1;
   for (double x = -bound; x < bound; x += discretization) {
     for (double y = -bound; y < bound; y += discretization) {
-      Eigen::Vector2d sample;
+      Vector2d sample;
       sample << x, y;
-      total_probability += gaussian.probabilityDensity(sample) * std::pow(discretization, 2);
+      total_probability += gaussian->density(sample) * std::pow(discretization, 2);
     }
   }
   EXPECT_NEAR(total_probability, 1.0, 1e-6);
