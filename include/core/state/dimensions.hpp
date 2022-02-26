@@ -1,195 +1,219 @@
 #pragma once
 
-#include <cmath>
+namespace dimensions {
+template <typename T, typename Parameter>
+class NamedType {
+ public:
+  explicit NamedType(T const& value) : value_(value) {}
+  explicit NamedType(T&& value) : value_(std::move(value)) {}
+  T& get() { return value_; }
+  T const& get() const { return value_; }
 
-namespace dimension {
-
-struct Dimension {
-  Dimension(int val) : value(val) {}
-  Dimension(float val) : value(val) {}
-  Dimension(double val) : value(val) {}
-
-  friend std::ostream &operator<<(std::ostream &output, const Dimension &dimension) {
-    output << dimension.value;
-    return output;
-  }
-
-  double value;
+ private:
+  T value_;
 };
 
-struct Time : public Dimension {
-  using Dimension::Dimension;
-};
+using Meter = NamedType<double, struct MeterTag>;
+using X = NamedType<Meter, struct Xposition>;
 
-struct TimeSquared : public Dimension {
-  using Dimension::Dimension;
-};
+}  // namespace dimensions
 
-struct Position : public Dimension {
-  using Dimension::Dimension;
-  Position(const Position &position) : Dimension(position.value) {}
-};
+// namespace dimension {
 
-struct Orientation : public Dimension {
-  Orientation(double angle) : Dimension(angle) { normalize(); }
-  void normalize() { value = value - (std::floor((value + M_PI) / (2 * M_PI))) * 2 * M_PI; }
-};
+// struct Dimension {
+//   Dimension(int val) : value(val) {}
+//   Dimension(float val) : value(val) {}
+//   Dimension(double val) : value(val) {}
 
-struct LinearVelocity : public Dimension {
-  using Dimension::Dimension;
-};
+//   friend std::ostream &operator<<(std::ostream &output, const Dimension &dimension) {
+//     output << dimension.value;
+//     return output;
+//   }
 
-struct AngularVelocity : public Dimension {
-  using Dimension::Dimension;
-};
+//   double value;
+// };
 
-struct LinearAcceleration : public Dimension {
-  using Dimension::Dimension;
-};
+// struct Time : public Dimension {
+//   using Dimension::Dimension;
+// };
 
-struct X : public Position {
-  using Position::Position;
-  X(const Position &position) : Position(position){};
-};
+// struct TimeSquared : public Dimension {
+//   using Dimension::Dimension;
+// };
 
-struct Y : public Position {
-  using Position::Position;
-  Y(const Position &position) : Position(position){};
-};
+// struct Position : public Dimension {
+//   using Dimension::Dimension;
+//   Position(const Position &position) : Dimension(position.value) {}
+// };
 
-struct Z : public Position {
-  using Position::Position;
-  Z(const Position &position) : Position(position){};
-};
+// struct Orientation : public Dimension {
+//   Orientation(double angle) : Dimension(angle) { normalize(); }
+//   void normalize() { value = value - (std::floor((value + M_PI) / (2 * M_PI))) * 2 * M_PI; }
+// };
 
-struct Roll : public Orientation {
-  using Orientation::Orientation;
-};
+// struct LinearVelocity : public Dimension {
+//   using Dimension::Dimension;
+// };
 
-struct Pitch : public Orientation {
-  using Orientation::Orientation;
-};
+// struct AngularVelocity : public Dimension {
+//   using Dimension::Dimension;
+// };
 
-struct Yaw : public Orientation {
-  using Orientation::Orientation;
-};
+// struct LinearAcceleration : public Dimension {
+//   using Dimension::Dimension;
+// };
 
-struct VelocityX : public LinearVelocity {
-  using LinearVelocity::LinearVelocity;
-};
+// struct X : public Position {
+//   using Position::Position;
+//   X(const Position &position) : Position(position){};
+// };
 
-struct VelocityY : public LinearVelocity {
-  using LinearVelocity::LinearVelocity;
-};
+// struct Y : public Position {
+//   using Position::Position;
+//   Y(const Position &position) : Position(position){};
+// };
 
-struct VelocityZ : public LinearVelocity {
-  using LinearVelocity::LinearVelocity;
-};
+// struct Z : public Position {
+//   using Position::Position;
+//   Z(const Position &position) : Position(position){};
+// };
 
-struct AccelerationX : public LinearAcceleration {
-  using LinearAcceleration::LinearAcceleration;
-};
+// struct Roll : public Orientation {
+//   using Orientation::Orientation;
+// };
 
-struct AccelerationY : public LinearAcceleration {
-  using LinearAcceleration::LinearAcceleration;
-};
+// struct Pitch : public Orientation {
+//   using Orientation::Orientation;
+// };
 
-struct AccelerationZ : public LinearAcceleration {
-  using LinearAcceleration::LinearAcceleration;
-};
+// struct Yaw : public Orientation {
+//   using Orientation::Orientation;
+// };
 
-struct RollRate : public AngularVelocity {
-  using AngularVelocity::AngularVelocity;
-};
+// struct VelocityX : public LinearVelocity {
+//   using LinearVelocity::LinearVelocity;
+// };
 
-struct PitchRate : public AngularVelocity {
-  using AngularVelocity::AngularVelocity;
-};
+// struct VelocityY : public LinearVelocity {
+//   using LinearVelocity::LinearVelocity;
+// };
 
-struct YawRate : public AngularVelocity {
-  using AngularVelocity::AngularVelocity;
-};
+// struct VelocityZ : public LinearVelocity {
+//   using LinearVelocity::LinearVelocity;
+// };
 
-/**
- * @brief Addition Operators
- */
+// struct AccelerationX : public LinearAcceleration {
+//   using LinearAcceleration::LinearAcceleration;
+// };
 
-X operator+(const X &lhs, const X &rhs) { return X(lhs.value + rhs.value); }
+// struct AccelerationY : public LinearAcceleration {
+//   using LinearAcceleration::LinearAcceleration;
+// };
 
-Y operator+(const Y &lhs, const Y &rhs) { return Y(lhs.value + rhs.value); }
+// struct AccelerationZ : public LinearAcceleration {
+//   using LinearAcceleration::LinearAcceleration;
+// };
 
-Z operator+(const Z &lhs, const Z &rhs) { return Z(lhs.value + rhs.value); }
+// struct RollRate : public AngularVelocity {
+//   using AngularVelocity::AngularVelocity;
+// };
 
-Roll operator+(const Roll &lhs, const Roll &rhs) { return Roll(lhs.value + rhs.value); }
+// struct PitchRate : public AngularVelocity {
+//   using AngularVelocity::AngularVelocity;
+// };
 
-Pitch operator+(const Pitch &lhs, const Pitch &rhs) { return Pitch(lhs.value + rhs.value); }
+// struct YawRate : public AngularVelocity {
+//   using AngularVelocity::AngularVelocity;
+// };
 
-Yaw operator+(const Yaw &lhs, const Yaw &rhs) { return Yaw(lhs.value + rhs.value); }
+// /**
+//  * @brief Addition Operators
+//  */
 
-VelocityX operator+(const VelocityX &lhs, const VelocityX &rhs) { return VelocityX(lhs.value + rhs.value); }
+// X operator+(const X &lhs, const X &rhs) { return X(lhs.value + rhs.value); }
 
-VelocityY operator+(const VelocityY &lhs, const VelocityY &rhs) { return VelocityY(lhs.value + rhs.value); }
+// Y operator+(const Y &lhs, const Y &rhs) { return Y(lhs.value + rhs.value); }
 
-VelocityZ operator+(const VelocityZ &lhs, const VelocityZ &rhs) { return VelocityZ(lhs.value + rhs.value); }
+// Z operator+(const Z &lhs, const Z &rhs) { return Z(lhs.value + rhs.value); }
 
-RollRate operator+(const RollRate &lhs, const RollRate &rhs) { return RollRate(lhs.value + rhs.value); }
+// Roll operator+(const Roll &lhs, const Roll &rhs) { return Roll(lhs.value + rhs.value); }
 
-PitchRate operator+(const PitchRate &lhs, const PitchRate &rhs) { return PitchRate(lhs.value + rhs.value); }
+// Pitch operator+(const Pitch &lhs, const Pitch &rhs) { return Pitch(lhs.value + rhs.value); }
 
-YawRate operator+(const YawRate &lhs, const YawRate &rhs) { return YawRate(lhs.value + rhs.value); }
+// Yaw operator+(const Yaw &lhs, const Yaw &rhs) { return Yaw(lhs.value + rhs.value); }
 
-AccelerationX operator+(const AccelerationX &lhs, const AccelerationX &rhs) {
-  return AccelerationX(lhs.value + rhs.value);
-}
+// VelocityX operator+(const VelocityX &lhs, const VelocityX &rhs) { return VelocityX(lhs.value + rhs.value); }
 
-AccelerationY operator+(const AccelerationY &lhs, const AccelerationY &rhs) {
-  return AccelerationY(lhs.value + rhs.value);
-}
+// VelocityY operator+(const VelocityY &lhs, const VelocityY &rhs) { return VelocityY(lhs.value + rhs.value); }
 
-AccelerationZ operator+(const AccelerationZ &lhs, const AccelerationZ &rhs) {
-  return AccelerationZ(lhs.value + rhs.value);
-}
+// VelocityZ operator+(const VelocityZ &lhs, const VelocityZ &rhs) { return VelocityZ(lhs.value + rhs.value); }
 
-/**
- * @brief Multiplication Operators
- */
+// RollRate operator+(const RollRate &lhs, const RollRate &rhs) { return RollRate(lhs.value + rhs.value); }
 
-TimeSquared operator*(const Time &lhs, const Time &rhs) { return TimeSquared(lhs.value * rhs.value); }
+// PitchRate operator+(const PitchRate &lhs, const PitchRate &rhs) { return PitchRate(lhs.value + rhs.value); }
 
-Position operator*(const LinearVelocity &lhs, const Time &rhs) { return Position(lhs.value * rhs.value); }
+// YawRate operator+(const YawRate &lhs, const YawRate &rhs) { return YawRate(lhs.value + rhs.value); }
 
-Position operator*(const Time &lhs, const LinearVelocity &rhs) { return Position(lhs.value * rhs.value); }
+// AccelerationX operator+(const AccelerationX &lhs, const AccelerationX &rhs) {
+//   return AccelerationX(lhs.value + rhs.value);
+// }
 
-Orientation operator*(const AngularVelocity &lhs, const Time &rhs) { return Orientation(lhs.value * rhs.value); }
+// AccelerationY operator+(const AccelerationY &lhs, const AccelerationY &rhs) {
+//   return AccelerationY(lhs.value + rhs.value);
+// }
 
-Orientation operator*(const Time &lhs, const AngularVelocity &rhs) { return Orientation(lhs.value * rhs.value); }
+// AccelerationZ operator+(const AccelerationZ &lhs, const AccelerationZ &rhs) {
+//   return AccelerationZ(lhs.value + rhs.value);
+// }
 
-Position operator*(const LinearAcceleration &lhs, const TimeSquared &rhs) { return Position(lhs.value * rhs.value); }
+// /**
+//  * @brief Multiplication Operators
+//  */
 
-Position operator*(const TimeSquared &lhs, const LinearAcceleration &rhs) { return Position(lhs.value * rhs.value); }
+// TimeSquared operator*(const Time &lhs, const Time &rhs) { return TimeSquared(lhs.value * rhs.value); }
 
-X operator*(const Time &lhs, const VelocityX &rhs) { return lhs * static_cast<LinearVelocity>(rhs); }
+// Position operator*(const LinearVelocity &lhs, const Time &rhs) { return Position(lhs.value * rhs.value); }
 
-X operator*(const VelocityX &lhs, const Time &rhs) { return rhs * static_cast<LinearVelocity>(lhs); }
+// Position operator*(const Time &lhs, const LinearVelocity &rhs) { return Position(lhs.value * rhs.value); }
 
-X operator*(const TimeSquared &lhs, const AccelerationX &rhs) { return lhs * static_cast<LinearAcceleration>(rhs); }
+// Orientation operator*(const AngularVelocity &lhs, const Time &rhs) { return Orientation(lhs.value * rhs.value); }
 
-X operator*(const AccelerationX &lhs, const TimeSquared &rhs) { return rhs * static_cast<LinearAcceleration>(lhs); }
+// Orientation operator*(const Time &lhs, const AngularVelocity &rhs) { return Orientation(lhs.value * rhs.value); }
 
-Y operator*(const Time &lhs, const VelocityY &rhs) { return lhs * static_cast<LinearVelocity>(rhs); }
+// Position operator*(const LinearAcceleration &lhs, const TimeSquared &rhs) { return Position(lhs.value *
+// rhs.value); }
 
-Y operator*(const VelocityY &lhs, const Time &rhs) { return rhs * static_cast<LinearVelocity>(lhs); }
+// Position operator*(const TimeSquared &lhs, const LinearAcceleration &rhs) { return Position(lhs.value *
+// rhs.value); }
 
-Y operator*(const TimeSquared &lhs, const AccelerationY &rhs) { return lhs * static_cast<LinearAcceleration>(rhs); }
+// X operator*(const Time &lhs, const VelocityX &rhs) { return lhs * static_cast<LinearVelocity>(rhs); }
 
-Y operator*(const AccelerationY &lhs, const TimeSquared &rhs) { return rhs * static_cast<LinearAcceleration>(lhs); }
+// X operator*(const VelocityX &lhs, const Time &rhs) { return rhs * static_cast<LinearVelocity>(lhs); }
 
-Z operator*(const Time &lhs, const VelocityZ &rhs) { return lhs * static_cast<LinearVelocity>(rhs); }
+// X operator*(const TimeSquared &lhs, const AccelerationX &rhs) { return lhs *
+// static_cast<LinearAcceleration>(rhs); }
 
-Z operator*(const VelocityZ &lhs, const Time &rhs) { return rhs * static_cast<LinearVelocity>(lhs); }
+// X operator*(const AccelerationX &lhs, const TimeSquared &rhs) { return rhs *
+// static_cast<LinearAcceleration>(lhs); }
 
-Z operator*(const TimeSquared &lhs, const AccelerationZ &rhs) { return lhs * static_cast<LinearAcceleration>(rhs); }
+// Y operator*(const Time &lhs, const VelocityY &rhs) { return lhs * static_cast<LinearVelocity>(rhs); }
 
-Z operator*(const AccelerationZ &lhs, const TimeSquared &rhs) { return rhs * static_cast<LinearAcceleration>(lhs); }
+// Y operator*(const VelocityY &lhs, const Time &rhs) { return rhs * static_cast<LinearVelocity>(lhs); }
 
-}  // namespace dimension
+// Y operator*(const TimeSquared &lhs, const AccelerationY &rhs) { return lhs *
+// static_cast<LinearAcceleration>(rhs); }
+
+// Y operator*(const AccelerationY &lhs, const TimeSquared &rhs) { return rhs *
+// static_cast<LinearAcceleration>(lhs); }
+
+// Z operator*(const Time &lhs, const VelocityZ &rhs) { return lhs * static_cast<LinearVelocity>(rhs); }
+
+// Z operator*(const VelocityZ &lhs, const Time &rhs) { return rhs * static_cast<LinearVelocity>(lhs); }
+
+// Z operator*(const TimeSquared &lhs, const AccelerationZ &rhs) { return lhs *
+// static_cast<LinearAcceleration>(rhs); }
+
+// Z operator*(const AccelerationZ &lhs, const TimeSquared &rhs) { return rhs *
+// static_cast<LinearAcceleration>(lhs); }
+
+// }  // namespace dimension

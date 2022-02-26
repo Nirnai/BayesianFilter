@@ -6,7 +6,7 @@
 #include "dimensions.hpp"
 
 using namespace Eigen;
-using namespace dimension;
+using namespace dimensions;
 
 template <class... Dimensions>
 class State {
