@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "core/state/state.hpp"
+// #include "core/state/state.hpp"
 
 TEST(StateTest, VariadicTemplateTest) {
   // State<X, Y, Z> position(1, 2, 3);
